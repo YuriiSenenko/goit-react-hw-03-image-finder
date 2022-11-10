@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import './ImageGalleryItem.css';
+import { Loader } from 'components/Loader/Loader';
 
 const API_KEY = '30036034-49bdb558087010c436563671a';
 
@@ -38,7 +39,7 @@ export class ImmageGalleryItem extends Component {
     return (
       <>
         {error && toast.error('The search field is empty!')}
-        {loading && <h1>Завантаження...</h1>}
+        {loading && <Loader />}
         {gallery &&
           gallery.hits.map(elem => (
             <li key={elem.id} className="ImageGalleryItem">
