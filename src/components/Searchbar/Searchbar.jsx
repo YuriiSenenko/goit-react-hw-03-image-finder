@@ -11,6 +11,8 @@ import { ImSearch } from 'react-icons/im';
 export class Searchbar extends Component {
   state = {
     searchValue: '',
+    page: 1,
+    gallery: [],
   };
 
   // Записує значення пошуку в state при зміні input
@@ -18,8 +20,9 @@ export class Searchbar extends Component {
     this.setState({ searchValue: e.currentTarget.value.toLowerCase() });
   };
 
-  // Вфдправляє сначення searchValue в state App
+  // Відправляє значення searchValue в state App
   handleSubmit = e => {
+    const { searchValue, page, gallery } = this.state;
     e.preventDefault();
 
     //якщо input пустий, не сабмітити форму
@@ -27,8 +30,8 @@ export class Searchbar extends Component {
       toast.error('The search field is empty!');
       return;
     }
-    this.props.onSubmit(this.state.searchValue);
-    this.setState({ searchValue: '' });
+    this.props.onSubmit(searchValue, page, gallery);
+    // this.setState({ searchValue: '', page: 1, gallery: [] });
   };
 
   render() {

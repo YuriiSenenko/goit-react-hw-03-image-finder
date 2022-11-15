@@ -8,7 +8,12 @@ export class ImageGallery extends Component {
       //Перекидую пропс далі
       <div>
         <ul className="ImageGallery">
-          <ImmageGalleryItem searchValue={this.props.searchValue} />
+          <ImmageGalleryItem
+            onModal={this.props.onModal}
+            modalImg={this.props.modalImg}
+            gallery={this.props.gallery}
+            status={this.props.status}
+          />
         </ul>
       </div>
     );
