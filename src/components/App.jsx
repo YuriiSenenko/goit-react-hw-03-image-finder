@@ -16,7 +16,7 @@ export class App extends Component {
   state = {
     searchValue: '',
     page: 1,
-    gallery: [],
+    gallery: null,
     showModal: false,
     error: null,
     status: 'idle',
@@ -63,10 +63,10 @@ export class App extends Component {
         .then(res => res.json())
 
         .then(gallery =>
-          this.setState({
-            gallery: [...this.state.gallery, ...gallery.hits],
+          this.setState(prevState => ({
+            gallery: [...prevState.gallery, ...gallery.hits],
             status: 'resolved',
-          })
+          }))
         )
         .catch(error => this.setState({ error, status: 'rejected' }))
         .finally(this.setState({ loader: false }));
