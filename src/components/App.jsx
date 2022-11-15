@@ -64,7 +64,7 @@ export class App extends Component {
 
         .then(gallery =>
           this.setState({
-            gallery: this.state.gallery.push(...gallery.hits),
+            gallery: [...this.state.gallery, ...gallery.hits],
             status: 'resolved',
           })
         )
