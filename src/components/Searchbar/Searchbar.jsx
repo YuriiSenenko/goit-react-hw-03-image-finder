@@ -20,7 +20,6 @@ export class Searchbar extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { searchValue } = this.state;
-    //! , page, gallery ----------------------------------------------
 
     //якщо input пустий, не сабмітити форму
     if (this.state.searchValue.trim() === '') {
@@ -28,7 +27,6 @@ export class Searchbar extends Component {
       return;
     }
     this.props.onSubmit(searchValue);
-    // , page, gallery ---------------------------------------------------------
   };
 
   render() {

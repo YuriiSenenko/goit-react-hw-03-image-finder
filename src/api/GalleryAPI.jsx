@@ -8,5 +8,4 @@ export const fetchGallery = (searchValue, page = 1) => {
   return fetch(
     `${BASE_URL}?key=${API_KEY}&q=${searchValue}&${FILTER}&page=${page}`
   );
-  //   .then(response => response.json());
 };
