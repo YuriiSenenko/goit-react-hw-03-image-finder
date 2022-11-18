@@ -1,6 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 import './Modal.css';
+import PropTypes from 'prop-types';
 
 export class Modal extends Component {
   // Закриття модалки по кліку на Escape
@@ -34,3 +35,8 @@ export class Modal extends Component {
     );
   }
 }
+
+Modal.propTypes = {
+  onClose: PropTypes.func,
+  largeImage: PropTypes.string,
+};

@@ -9,19 +9,49 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
-
-const API_KEY = '30036034-49bdb558087010c436563671a';
+import { fetchGallery } from '../api/GalleryAPI';
 
 export class App extends Component {
   state = {
     searchValue: '',
     page: 1,
-    gallery: null,
+    gallery: [],
     showModal: false,
     error: null,
     status: 'idle',
-    loader: false,
     largeImageURL: '',
+    loadMore: false,
+  };
+
+  componentDidUpdate = (_, prevState) => {
+    const { page, searchValue } = this.state;
+    const prevValue = prevState.searchValue;
+
+    if (prevValue !== searchValue || prevState.page !== page) {
+      //! Запуск loader
+      this.setState({ status: 'pending' });
+
+      //! Fetch
+      fetchGallery(searchValue, this.state.page)
+        .then(response => response.json())
+        .then(({ hits }) => {
+          this.showLoadMore(hits);
+          this.setState(() => ({
+            gallery: [...this.state.gallery, ...hits],
+            status: 'resolved',
+          }));
+        })
+
+        .catch(error => this.setState({ error, status: 'rejected' }));
+    }
+  };
+
+  showLoadMore = arr => {
+    if (arr.length === 12) {
+      this.setState({ loadMore: true });
+    } else {
+      this.setState({ loadMore: false });
+    }
   };
 
   // Записуємо результат пошуку в state App
@@ -35,52 +65,25 @@ export class App extends Component {
   };
 
   // Відкривашка модального вікна
-  toggleModal = event => {
-    // console.log(event.currentTarget.id);
+  toggleModal = () => {
     this.setState(state => ({
       showModal: !state.showModal,
-      // largeImage: event.currentTarget.id,
     }));
   };
 
   modalImg = img => {
-    console.log(img);
     this.setState({ largeImageURL: img });
-    // return event.currentTarget.id;
-  };
-
-  componentDidUpdate = (_, prevState) => {
-    const prevValue = prevState.searchValue;
-    const nextValue = this.state.searchValue;
-
-    if (prevValue !== nextValue || prevState.page !== this.state.page) {
-      //запускаєм loader, і обнуляємо стейт перед новим HTTP запитом
-      this.setState({ loader: true, status: 'pending' });
-
-      fetch(
-        `https://pixabay.com/api/?q=${nextValue}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12&page=${this.state.page}`
-      )
-        .then(res => res.json())
-
-        .then(gallery =>
-          this.setState(prevState => ({
-            gallery: [...prevState.gallery, ...gallery.hits],
-            status: 'resolved',
-          }))
-        )
-        .catch(error => this.setState({ error, status: 'rejected' }))
-        .finally(this.setState({ loader: false }));
-    }
   };
 
   render() {
-    const { status, gallery } = this.state;
+    const { status, gallery, showModal, loadMore } = this.state;
 
-    // if (status === 'idle') {
-    //   return;
-    // }
+    if (status === 'idle') {
+      // return;
+    }
+
     if (status === 'pending') {
-      return;
+      // return;
     }
     if (status === 'rejected') {
       return toast.error('The search field is empty!');
@@ -88,7 +91,7 @@ export class App extends Component {
     return (
       <div className="App">
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {this.state.gallery && (
+        {gallery && (
           <ImageGallery
             gallery={gallery}
             status={status}
@@ -96,11 +99,10 @@ export class App extends Component {
             modalImg={this.modalImg}
           />
         )}
+        {status === 'pending' && <Loader />}
+        {loadMore && <Button loadMore={this.changePage}>Load more</Button>}
 
-        {gallery && <Button loadMore={this.changePage} />}
-        {this.state.loader && <Loader />}
-
-        {this.state.showModal && (
+        {showModal && (
           <Modal
             onClose={this.toggleModal}
             largeImage={this.state.largeImageURL}
