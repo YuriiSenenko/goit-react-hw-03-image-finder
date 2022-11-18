@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 export class ImageGallery extends Component {
   render() {
-    const { status, gallery, onModal, modalImg } = this.props;
+    const { gallery, onModal, modalImg } = this.props;
     return (
       //Перекидую пропс далі
       <div>
@@ -14,7 +14,6 @@ export class ImageGallery extends Component {
             onModal={onModal}
             modalImg={modalImg}
             gallery={gallery}
-            status={status}
           />
         </ul>
       </div>
@@ -25,6 +24,5 @@ export class ImageGallery extends Component {
 ImageGallery.propTypes = {
   onModal: PropTypes.func,
   gallery: PropTypes.array,
-  status: PropTypes.string,
   modalImg: PropTypes.func,
 };

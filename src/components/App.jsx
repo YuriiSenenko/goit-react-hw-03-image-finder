@@ -49,6 +49,9 @@ export class App extends Component {
   showLoadMore = arr => {
     if (arr.length === 12) {
       this.setState({ loadMore: true });
+    } else if (arr.length === 0) {
+      this.setState({ loadMore: false });
+      toast.info('Nothing was found for your query!');
     } else {
       this.setState({ loadMore: false });
     }
